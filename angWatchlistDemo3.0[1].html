@@ -1,0 +1,358 @@
+<html lang="en">
+<head>
+
+-->
+<link rel="stylesheet" href="bootstrap.min.css">
+<!-- Optional Bootstrap theme -->
+<link rel="stylesheet" href="bootstrap-theme.min.css">
+<script src="bootstrap.min.js"></script>
+<script src="angular.min.js"></script>
+<!--ui-bootstrap needed for collasping the nav. Can also learn angularStrap -->
+<script src="ui-bootstrap-tpls-2.5.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="watchlistDemo3.0.css"/>
+<script src="watchlistDemo3.0.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/> 
+<meta name="viewport" content="width=device-width, initial-scale=1 minimum-scale=1, maximum-scale=1" charset="utf-8">
+    
+<title>MGC Bet Capper/Pincher WatchList</title>
+
+</head>
+<!--sets the HTML document to a angularJS app call myApp -->
+<body ng-app="myApp"  class="middleColumn" ng-controller="ctrlSearch">
+  
+<!--creates a navigation area, fixed to the top of the screen, and set it to "Bootstrap" default -->
+<nav class="navbar-default" >
+  <!--navColor variable sets the color of the nav area -->
+  <div class="container-fluid navColor">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <!--Display title of the app --> 
+      <h1 class="centerAddSuccessMessage text-center" ng-click="setView('search')">MGC WatchList</h1>
+    </div>
+    <!--similar to notes in ctrlSearch.js, i didn't mark where I got this fix or how it works -->
+    <div class="navbar-collapse" ng-class="isCollapsed ? 'collapse' : 'in'">
+      <!--Display add/delete link on app -->
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" class="btn btn-link" role="button" ng-click="setView('add')"><h4>Add Suspect</h4></a></li>
+        <li><a href="#" class="btn btn-link" role="button" ng-click="setView('search')"><h4>Search Suspect</h4></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid navfix">
+    <div class="row">
+
+    <!--middleColumn variable class sets the background color, ctrlSearch variable sets binds data from ctrlSearch.js to this div -->
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 middleColumn">
+  
+    <!--use ng-show directive to show "showSearchSuspect" page when corrosponding nav link is clicked.-->  
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="view=='search'">
+     <h2 class="shrinkTitles">Who are you trying to find? (ex. Smith, John)</h2>
+            <!--creates a search text-box binding the searchSuspect variable to a filter in a suspect database filter  -->
+            <div><input type='search' class='form-control' placeholder='Search' ng-model="searchSuspect"></div>
+            <br>
+            <!--this div is hidden on moible devices-->
+            <div class="hidden-xs col-sm-12 col-md-12 col-lg-12">
+            <label for="singleSelect"> Sort Suspects by: </label>
+            <!--sort box binding the value variable of the selected option to the sortBy variable used in a filter in the suspect database  -->
+            <select name="singleSelect" ng-model="sortBy">
+              <option value="-date">Date</option>
+              <option value="lName">Last Name</option>
+              <option value="crime">Crime</option>
+              <option value="casino">Casino</option>
+              <option value="action">Action Taken</option>
+              <option value="agentlName">Agent Involved</option>
+            </select>
+            </div>
+            
+            <!--This div is only visible on mobile devices -->
+            <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+            <label for="singleSelect"> Sort Suspects by: </label>
+            <!--sort box binding the value variable of the selected option to the sortBy variable used in a filter in the suspect database  -->
+            <select name="singleSelect" ng-model="sortBy">
+              <option value="-date">Date</option>
+              <option value="lName">Last Name</option>
+            </select>
+            </div>
+            <br><br>
+            
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
+              <!--Display suspects narrative  from clicked date using showNarrative method that binds suspect.details to narrative variable -->
+              <p class="narrativeColor">{{narrative}}<span ng-show="narrative!==''" class="deleteColor" ng-click="clearNarrative()"> Click Here to Clear</span></p>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 addSuccessMessage" ng-show="showSuccess"><h3>{{success}}</h3></div>
+          </div><!--end of narrative and instructions row -->
+
+          <!--Search Titles -->
+          
+          <div class='row'>
+            <div class='col-xs-2 col-sm-1 col-md-1 col-lg-1'><h5 class="shrinkAddDeleteTitles viewNarrativeInstructions">view narrative</h5></div>
+            <div class='col-xs-4 col-sm-1 col-md-1 col-lg-1'><h3 class="shrinkTitles">Date</h3></div>
+            <div class='col-xs-4 col-sm-2 col-md-2 col-lg-2'><h3 class="shrinkTitles">Suspect Name</h3></div>
+            <div class='hidden-xs col-sm-2 col-md-2 col-lg-2'><h3 class="shrinkTitles">Crime</h3></div> 
+            <div class='hidden-xs col-sm-2 col-md-2 col-lg-2'><h3 class="shrinkTitles">Casino</h3></div>
+            <div class='hidden-xs col-sm-2 col-md-2 col-lg-2'><h3 class="shrinkTitles">Action Taken</h3></div>
+            <div class='hidden-xs col-sm-1 col-md-1 col-lg-1'><h3 class="shrinkTitles">Agent Involved</h3></div>
+            <div class='col-xs-2 col-sm-1 col-md-1 col-lg-1'><h5 class="shrinkAddDeleteTitles viewNarrativeInstructions">Delete</h5></div>
+          </div><!--End of search Suspects Title Row --> 
+            
+          <!--Display each element (x) in the suspects array filtered based on searchSuspect varible (from search input field). Display in columns, using a single row, according to object attribute. -->    
+          <div class="row alternatingRows" ng-repeat="x in suspectsData| filter:searchSuspect| orderBy:sortBy" title="Click the x to view the narrative" data-toggle="tooltip">
+           <div class="row">
+            <!--use ng-click and a hyper-link to click "showNarrative" method. This method binds current suspect.details to narrative variable  to display above. -->
+            <div class='col-xs-2 col-sm-1 col-md-1 col-lg-1 bigSigns text-right'><a ng-click="showNarrative(x.details)">+</a></div>
+            
+            <div class='col-xs-4 col-sm-1 col-md-1 col-lg-1' ng-class="{'enlargeTitle':sortBy=='-date'}">
+               <!--sets a date filter for each suspect. Makes it more user friendly. hidden-xs-->
+               {{x.date | date: longDate}}
+            </div>
+            <div class='col-xs-4 col-sm-2 col-md-2 col-lg-2' ng-class="{'enlargeTitle':sortBy=='lName'}">
+                {{x.lName}} , {{x.fName}} 
+            </div>
+            <div class='hidden-xs col-sm-2 col-md-2 col-lg-2' ng-class="{'enlargeTitle':sortBy=='crime'}">
+                {{x.crime}}
+            </div>
+            <div class='hidden-xs col-sm-2 col-md-2 col-lg-2' ng-class="{'enlargeTitle':sortBy=='casino'}">
+                {{x.casino}}
+            </div>
+            <div class='hidden-xs col-sm-2 col-md-2 col-lg-2' ng-class="{'enlargeTitle':sortBy=='action'}">
+                {{x.action}}
+            </div>
+            <!--show a red "x" by each suspect. When clicked, "deleteSuepect" method deletes current suspects-->
+            <div class='hidden-xs col-sm-1 col-md-1 col-lg-1' ng-class="{'enlargeTitle':sortBy=='agentlName'}">
+               {{x.agentlName}} , {{x.agentfName}} 
+            </div>
+            <div class='col-xs-2 col-sm-1 col-md-1 col-lg-1 bigSigns'><span class="deleteColor" ng-click="deleteSuspect(x)">×</span></div>
+           </div>
+           <br><!--Line break between suspect rows -->
+          </div><!--End of search row -->
+        </div><!--End of showSearchSuspect function div -->  
+          
+                    <!--Display Add Suspect -->
+          <!--use ng-show directive to show "addSuspect" page when corrosponding nav link is clicked.-->          
+          <div class="row" ng-show="view=='add'">
+            <!--Left blank side area of add suspect page-->
+            <div class="col-xs-0 col-sm-4 col-md-4 col-lg-4"></div>
+            
+            <!--middle content area of add suspect page-->
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+            <form name="myform" novalidate>
+              <h2 class="shrinkTitles text-center">Add a Suspect</h2>
+              
+              <!--myform input box for susDate variable that sets Date for new suspects-->
+              <div class="row ">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputDate">Date:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                  <input name="inputDate" type="date" ng-model="susDate" required>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->  
+                  <span ng-show="myform.inputDate.$invalid && !myform.inputDate.$pristine">Required!</span>
+                  <span ng-show="myform.inputDate.$valid && !myform.inputDate.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform input box for susfName variable that sets the First Name for new suspects-->
+              <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputfName">Suspect First Name:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">                  
+                  <input name="inputfName" type="text" ng-model="susfName" value="John" required>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputfName.$invalid && !myform.inputfName.$pristine">Required!</span>
+                  <span ng-show="myform.inputfName.$valid && !myform.inputfName.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform input box for suslName variable that sets the last Name for new suspects-->
+              <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputlName">Suspect Last Name:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">                  
+                  <input name="inputlName" type="text" ng-model="suslName" ng-mouseup= "addNarrative(suslName)" value="Smith" required>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputlName.$invalid && !myform.inputlName.$pristine">Required!</span>
+                  <span ng-show="myform.inputlName.$valid && !myform.inputlName.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform pre-populated options box from $scope.casinoNames array for susCasino variable that sets Casino for new suspects-->
+              <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputCrime">Crime Committed:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">                  
+                  <select name="inputCrime" ng-model="susCrime" ng-options="x for x in crimes" required>
+                  </select>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputCrime.$invalid && !myform.inputCrime.$pristine">Required!</span>
+                  <span ng-show="myform.inputCrime.$valid && !myform.inputCrime.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform pre-populated options box from $scope.casinoNames array for susCasino variable that sets Casino for new suspects-->
+              <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputCasino">Casino Name:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">                  
+                  <select name="inputCasino" ng-model="susCasino" ng-options="x for x in casinoNames" required>
+                  </select>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputCasino.$invalid && !myform.inputCasino.$pristine">Required!</span>
+                  <span ng-show="myform.inputCasino.$valid && !myform.inputCasino.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform pre-populated options box from $scope.actionTaken array for susAction variable that sets Action Taken for new suspects-->
+              <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputAction">Action Taken:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">                  
+                  <select name="inputAction" ng-model="susAction" ng-options="x for x in actionTaken" required>
+                  </select>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputAction.$invalid && !myform.inputAction.$pristine">Required!</span>
+                  <span ng-show="myform.inputAction.$valid && !myform.inputAction.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform input box for susAgentfName variable that sets Agent Involved First Name for new suspects-->
+              <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputAgentfName">Agent Involved First Name:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">                  
+                  <input name="inputAgentfName" type="text" ng-model="susAgentfName" value="Jane" required>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputAgentfName.$invalid && !myform.inputAgentfName.$pristine">Required!</span>
+                  <span ng-show="myform.inputAgentfName.$valid && !myform.inputAgentfName.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform input box for susAgent variable that sets Agent Involved for new suspects-->
+              <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputAgentlName">Agent Involved Last Name:</label>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">                  
+                  <input name="inputAgentlName" type="text" ng-model="susAgentlName" value="Doe" required>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputAgentlName.$invalid && !myform.inputAgentlName.$pristine">Required!</span>
+                  <span ng-show="myform.inputAgentlName.$valid && !myform.inputAgentlName.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+              </div>
+              
+              <!--myform input box for susDetails variable that sets Narrative for new suspects-->
+              <div class="row">
+                <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
+                  <label for="inputDetails">Brief Narrative (under 140 charaters): Include important information like middle initial, SSN, DOB, and other identifying info. Be as accurate as possible. State the crime (Minor Gaming, Past Posting, Bet Capping/Pinching) You can not edit once you save. </label><br>
+                </div>
+                <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">                  
+                  <textarea ng-model="susDetails" name="inputDetails" rows="10" cols="50" maxlength="200" required>
+                  Please keep this short 
+                  </textarea><br>
+                  <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+                  <span ng-show="myform.inputDetails.$invalid && !myform.inputDetails.$pristine">Required!</span>
+                  <span ng-show="myform.inputDetails.$valid && !myform.inputDetails.$pristine"><i class="fa fa-check"></i></span>
+                </div>
+                <p></p>
+              </div>
+              <!--Display Narrative -->
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><h3>Narrative</h3><p>On {{susDate | date: longDate}}, {{susfName}} {{suslName}} was {{susCrime}} at {{susCasino}} and was {{susAction}}. Agent {{susAgentfName}} {{susAgentlName}} provided the following details: {{susDetails}}</p></div>
+              </div>              
+              
+              <!--submit new suspects button "disable" till valid validation-->
+              <button type="submit" name="submit" ng-disabled="myform.$invalid" class="btn btn-primary btn-md" ng-click="addSuspect()">Add Suspect</button>
+              <!--new suspect reset button, reset all fields-->
+              <button class="btn btn-danger btn-md" ng-click="resetAddSuspectFields()">Reset Fields</button>
+            </form>
+
+          </div><!-- End of middle column-->
+          <!--Right blank side area of add suspect page-->
+          <div class="col-xs-0 col-sm-4 col-md-4 col-lg-4"></div>
+          </div><!--End of showAddSuspect div-->
+          
+          <!--End of Add Suspect Div -->
+          </div><!--End of Central Div, contain ctrlSearch information-->
+              
+                                      <!--Display delete Page -->
+    <!--use ng-show directive to show "Delete" page when corrosponding delete-->          
+    <div class="row" ng-show="view=='deletePage'">
+      <!--left side empty column -->
+      <div class="hidden-xs col-sm-4 col-md-4 col-lg-4"></div>
+      <!--central column -->
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+      <form name="deleteform" novalidate>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <label for="inputdeletepwd">Type password to delete suspect {{deletefName}} {{deletelName}}:</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <input name="inputdeletepwd" type="text" ng-model="deletePwd" required>
+          <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+          <span ng-show="deleteform.inputdeletepwd.$invalid && !deleteform.inputdeletepwd.$pristine">Required!</span>
+          <p>{{fail}}<p>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">        
+        <!--submit new suspects button "disable" till valid validation-->
+        <button type="submit" name="submit" ng-disabled="deleteform.$invalid" class="btn btn-primary btn-md" ng-click="delete(deletePwd)">Submit Password</button>
+        </div>
+      </form>
+      </div><!--End of central column -->
+      <!--right side empty column -->
+      <div class="hidden-xs col-sm-4 col-md-4 col-lg-4"></div>
+    </div>
+    </div><!--silent row -->
+    
+                                      <!--Display Log-In Page -->
+    <!--use ng-show directive to show "Log-In" page when corrosponding delete-->          
+    <div class="row" ng-show="view=='logInPage'">
+      <!--left side empty column -->
+      <div class="hidden-xs col-sm-4 col-md-4 col-lg-4"></div>
+      <!--central column -->
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+      <form name="logInform" novalidate>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <label for="inputLogInpwd">Type password to Log-In:</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <input name="inputlogInpwd" type="text" ng-model="userPwd" required>
+          <!--input field validation. Checking for if valid and if field been clicked on and left empty-->
+          <span ng-show="logInform.inputLogInpwd.$invalid && !logInform.inputLogInpwd.$pristine">Required!</span>
+          <p>{{fail}}<p>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!--submit new suspects button "disable" till valid validation-->
+        <button type="submit" name="submit" ng-disabled="logInform.$invalid" class="btn btn-primary btn-md" ng-click="logIn(userPwd)">Submit Password</button>
+        </div>
+      </form>
+      </div><!--End of central column -->
+      <!--right side empty column -->
+      <div class="hidden-xs col-sm-4 col-md-4 col-lg-4"></div>
+    </div>
+    </div><!--silent row -->
+        
+    <footer class="container-fluid">
+      <div class= "row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <h6 class="centerAddSuccessMessage">Developed by JC Smiley</h6>
+        </div>
+      </div>  
+      
+    </footer>
+        
+    
+</div><!--End of Body content div  -->
+</body>
+</html>
