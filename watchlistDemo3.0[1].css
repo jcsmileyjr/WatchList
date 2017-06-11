@@ -1,0 +1,132 @@
+/*for a sticky footer you need this html, body, and footer sections*/
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 20px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 20px;
+  background-color: #EEEEEE;
+}
+
+/*push site's body down below the nav 1.12. change from 73px to 1px in 1.13. 
+Don't need if remove navbar-nav and just use navbar-default*/
+.navFix {
+    padding-top: 1px;
+
+}
+/*center align site Title and white text color in nav 1.0*/
+nav h1, h4 {
+    text-align: center;
+    color:white;
+}
+
+/*burgandy red color of nav 1.0*/
+.navColor {
+  background-color: #8C001A ;
+  }
+
+/*grey stone background color of content middle 1.0*/
+.middleColumn {
+  background-color: #EEEEEE;
+}
+
+/*alternate background color between light grey for odd and med. grey for even suspects rows  */
+.alternatingRows:nth-child(even) {
+  background: Gainsboro;
+} 
+/*set narrative background color to med. grey*/
+.narrativeColor {
+    background: White;
+    font-size: 16px;
+    color: navy;
+
+}
+
+/*set red color for delete "x" on each suspect */
+.deleteColor {
+  color:red;
+}
+
+/*set burgandy red color for viewing narrative instructions on search page */
+.viewNarrativeInstructions {
+  color: #8C001A ;
+  
+}
+
+/*center app title */
+.centerAddSuccessMessage{
+  text-align: center;
+
+}
+
+/*center, color, and make bigger add/delete suspect success message */
+.addSuccessMessage {
+  text-align: center;
+  color: navy;
+  font-size: 18px;
+}
+
+/*change color to navy or darkgreen when sorting to visually show selection*/
+.enlargeTitle {
+  color: navy;
+}
+
+
+/*adjust size of narrative plus sign and delete suspect minus sign*/
+.bigSigns {
+  font-size: 18px;
+}
+
+h5 {
+  margin-top: 40px;
+  margin-bottom: -10px;
+}
+
+.fa-check {
+  color: green;
+}
+/*========== From Scotch.io tutorials Non-Mobile First Method  ==========*/
+
+    /* Large Devices, Wide Screens */
+    @media only screen and (max-width : 1200px) {
+
+    }
+
+    /* Medium Devices, Desktops */
+    @media only screen and (max-width : 992px) {
+
+    }
+
+    /* Small Devices, Tablets */
+    @media only screen and (max-width : 768px) {
+
+    }
+
+    /* Extra Small Devices, Phones */ 
+    @media only screen and (max-width : 480px) {
+      /* in mobile view, shrink "search" page titles and make them dark bold */ 
+      .shrinkTitles {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .shrinkAddDeleteTitles {
+        /* in mobile view, shrink "search" page titles and make them dark bold */ 
+        font-size: 10px;
+        font-weight: bold;
+      }
+    }
+
+    /* Custom, iPhone Retina */ 
+    @media only screen and (max-width : 320px) {
+
+    }    
